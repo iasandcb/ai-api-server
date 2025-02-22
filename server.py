@@ -36,11 +36,11 @@ def say_app_stream(text: str = Query()):
     return StreamingResponse(event_stream(), media_type="text/event-stream")
 
 @app.get("/chat")
-def chat(text: str = Query()):
-    response = cmodel.get_response('user1', 'English', text)
+def chat(text: str = Query(), user: str = Query()):
+    response = cmodel.get_response(user, 'English', text)
     return {"content" :response.content}
 
 @app.get("/search")
-def search(text: str = Query()):
-    response = amodel.get_response('user1', text)
+def search(text: str = Query(), user: str = Query()):
+    response = amodel.get_response(user, text)
     return {"content" :response.content}

@@ -19,7 +19,7 @@ class State(TypedDict):
 class ChatbotModel:
   def __init__(self):
     load_dotenv() 
-    self.model = init_chat_model("gpt-4o-mini", model_provider="openai")
+    model = init_chat_model("gpt-4o-mini", model_provider="openai")
     prompt_template = ChatPromptTemplate.from_messages(
         [
             (
@@ -32,7 +32,7 @@ class ChatbotModel:
     trimmer = trim_messages(
         max_tokens=65,
         strategy="last",
-        token_counter=self.model,
+        token_counter=model,
         include_system=True,
         allow_partial=False,
         start_on="human",
@@ -44,7 +44,7 @@ class ChatbotModel:
         prompt = prompt_template.invoke(
             {"messages": trimmed_messages, "language": state["language"]}
         )
-        response = self.model.invoke(prompt)
+        response = model.invoke(prompt)
         return {"messages": response}
     
     workflow.add_edge(START, "model")
