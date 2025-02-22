@@ -13,3 +13,6 @@ GET https://ideal-space-doodle-rqvpv97jjf5j5r-8000.app.github.dev/chat?text=My n
 
 ###
 GET https://ideal-space-doodle-rqvpv97jjf5j5r-8000.app.github.dev/chat?text=What is my name
+
+###
+GET https://ideal-space-doodle-rqvpv97jjf5j5r-8000.app.github.dev/search?text=What is the weathre in SF
