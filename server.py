@@ -3,6 +3,7 @@ from fastapi.responses import StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
 import app_model
+import chatbot_model
 
 app = FastAPI()
 
@@ -11,6 +12,7 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 model = app_model.AppModel()
+cmodel = chatbot_model.ChatbotModel()
 
 @app.get("/say")
 def say_app(text: str = Query()):
@@ -30,3 +32,8 @@ def say_app_stream(text: str = Query()):
             yield f"data: {message.content}\n\n"
             
     return StreamingResponse(event_stream(), media_type="text/event-stream")
+
+@app.get("/chat")
+def say_app(text: str = Query()):
+    response = cmodel.get_response('user1', 'English', text)
+    return {"content" :response.content}
