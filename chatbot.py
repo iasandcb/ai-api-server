@@ -23,6 +23,33 @@ prompt_template = ChatPromptTemplate.from_messages(
     ]
 )
 
+from langchain_core.messages import AIMessage, SystemMessage, trim_messages
+
+trimmer = trim_messages(
+    max_tokens=65,
+    strategy="last",
+    token_counter=model,
+    include_system=True,
+    allow_partial=False,
+    start_on="human",
+)
+
+messages = [
+    SystemMessage(content="you're a good assistant"),
+    HumanMessage(content="hi! I'm bob"),
+    AIMessage(content="hi!"),
+    HumanMessage(content="I like vanilla ice cream"),
+    AIMessage(content="nice"),
+    HumanMessage(content="whats 2 + 2"),
+    AIMessage(content="4"),
+    HumanMessage(content="thanks"),
+    AIMessage(content="no problem!"),
+    HumanMessage(content="having fun?"),
+    AIMessage(content="yes!"),
+]
+
+trimmer.invoke(messages)
+
 from typing import Sequence
 
 from langchain_core.messages import BaseMessage
@@ -39,7 +66,10 @@ workflow = StateGraph(state_schema=State)
 
 # Define the function that calls the model. 인수는 우리가 정의한 State
 def call_model(state: State):
-    prompt = prompt_template.invoke(state)
+    trimmed_messages = trimmer.invoke(state["messages"])
+    prompt = prompt_template.invoke(
+        {"messages": trimmed_messages, "language": state["language"]}
+    )
     response = model.invoke(prompt)
     return {"messages": response}
 
@@ -51,11 +81,11 @@ workflow.add_node("model", call_model)
 memory = MemorySaver()
 app = workflow.compile(checkpointer=memory)
 
-config = {"configurable": {"thread_id": "abc456"}}
-query = "Hi! I'm Bob."
-language = "Spanish"
+config = {"configurable": {"thread_id": "abc678"}}
+query = "What math problem did I ask?"
+language = "English"
 
-input_messages = [HumanMessage(query)]
+input_messages = messages + [HumanMessage(query)]
 output = app.invoke(
     {"messages": input_messages, "language": language},
     config,
