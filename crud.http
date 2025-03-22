@@ -1,0 +1,18 @@
+GET https://ideal-space-doodle-rqvpv97jjf5j5r-8000.app.github.dev/articles
+
+###
+
+GET https://ideal-space-doodle-rqvpv97jjf5j5r-8000.app.github.dev/articles/1
+
+###
+GET https://ideal-space-doodle-rqvpv97jjf5j5r-8000.app.github.dev/articles/3
+
+###
+PUT https://ideal-space-doodle-rqvpv97jjf5j5r-8000.app.github.dev/articles/1
+content-type: application/json
+
+
+{
+    "title": "Healthy Lunch",
+    "body": "Test"
+}
